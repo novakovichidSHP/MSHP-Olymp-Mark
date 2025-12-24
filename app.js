@@ -26,7 +26,6 @@ const programButtons = document.getElementById("programButtons");
 const backToSeasonBtn = document.getElementById("backToSeason");
 const isMenuPage = Boolean(menu);
 const isGamePage = Boolean(game);
-const isCombinedPage = isMenuPage && isGamePage;
 
 let config = null;
 let boardConfig = null;
@@ -137,17 +136,20 @@ function setupGame() {
   pointsInput.value = state.points;
   scaleInput.value = state.scale;
   renderOverseer();
+  updateScale();
   renderBoard();
   updateThresholds();
   renderCommandCosts();
   updateCommands();
   renderProgram();
   renderTeam();
-  updateScale();
 }
 
-function updateScale() {
+function updateScale(shouldRenderBoard = false) {
   document.documentElement.style.setProperty("--scale", state.scale / 100);
+  if (shouldRenderBoard && isGamePage) {
+    renderBoard();
+  }
 }
 
 function updateThresholds() {
@@ -156,7 +158,7 @@ function updateThresholds() {
     return;
   }
   const thresholds = {
-    stage1: variantConfig.coefficients.stage1 * state.students,
+    commands: variantConfig.coefficients.commands * state.students,
     hero: variantConfig.coefficients.hero * state.students,
     final: variantConfig.coefficients.final * state.students
   };
@@ -235,28 +237,41 @@ function renderBoard() {
   board.innerHTML = "";
   const grid = document.createElement("div");
   grid.className = "grid";
+  const columns = Number(variant.grid.columns) || 1;
+  const rows = Number(variant.grid.rows) || 1;
+  grid.style.setProperty("--grid-columns", columns);
+  grid.style.setProperty("--grid-rows", rows);
 
+  const uniquePath = new Map();
   variant.grid.path.forEach((cell) => {
+    uniquePath.set(`${cell.x}:${cell.y}`, cell);
+  });
+
+  uniquePath.forEach((cell) => {
     const cellEl = document.createElement("div");
     cellEl.className = "cell";
     placeAt(cellEl, cell);
     grid.appendChild(cellEl);
   });
 
-  const stone = createPiece("object", "pictures/stone.jpg", "Камень");
-  stone.classList.add("object--stone");
-  placeAt(stone, variant.grid.stone);
-  grid.appendChild(stone);
+  if (variant.grid.stone) {
+    const stone = createPiece("object", "pictures/stone.jpg", "Камень");
+    stone.classList.add("object--stone");
+    placeAt(stone, variant.grid.stone);
+    grid.appendChild(stone);
+  }
 
-  const box = createPiece("object", "pictures/box.png", "Ящик");
-  box.classList.add("object--box");
-  placeAt(box, variant.grid.box);
-  const lock = document.createElement("img");
-  lock.src = "pictures/lock.jpg";
-  lock.alt = "Замок";
-  lock.className = "object--lock";
-  box.appendChild(lock);
-  grid.appendChild(box);
+  if (variant.grid.box) {
+    const box = createPiece("object", "pictures/box.png", "Ящик");
+    box.classList.add("object--box");
+    placeAt(box, variant.grid.box);
+    const lock = document.createElement("img");
+    lock.src = "pictures/lock.jpg";
+    lock.alt = "Замок";
+    lock.className = "object--lock";
+    box.appendChild(lock);
+    grid.appendChild(box);
+  }
 
   getHeroes().forEach((hero) => {
     const heroEl = createPiece("hero", hero.img, hero.name);
@@ -497,7 +512,7 @@ function handleInputChange() {
 function handleScale() {
   state.scale = Number(scaleInput.value);
   saveState();
-  updateScale();
+  updateScale(true);
 }
 
 function handleReset() {
@@ -579,14 +594,7 @@ async function init() {
 
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      if (isCombinedPage) {
-        showSeasonSelection();
-        if (menu) {
-          menu.classList.remove("hidden");
-        }
-      } else {
-        window.location.href = "index.html";
-      }
+      window.location.href = "index.html";
     });
   }
 
@@ -619,10 +627,6 @@ async function init() {
 
   if (isGamePage) {
     if (variantParam && !isValidVariant(variantParam)) {
-      if (isCombinedPage) {
-        showSeasonSelection();
-        return;
-      }
       window.location.href = "index.html";
       return;
     }
@@ -635,11 +639,7 @@ async function init() {
       return;
     }
     if (!state.selectedVariant) {
-      if (!isCombinedPage) {
-        window.location.href = "index.html";
-        return;
-      }
-      showSeasonSelection();
+      window.location.href = "index.html";
       return;
     }
     setupGame();

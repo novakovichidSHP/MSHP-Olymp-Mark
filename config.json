@@ -14,8 +14,8 @@
       ],
       "stageRules": [
         {
-          "id": "stage1",
-          "label": "Первая команда",
+          "id": "commands",
+          "label": "Открытие команд",
           "commands": ["up", "down", "left", "right"]
         },
         {
@@ -30,7 +30,7 @@
         }
       ],
       "coefficients": {
-        "stage1": 115,
+        "commands": 115,
         "hero": 200,
         "final": 800
       },
@@ -59,8 +59,8 @@
       ],
       "stageRules": [
         {
-          "id": "stage1",
-          "label": "Первая команда",
+          "id": "commands",
+          "label": "Открытие команд",
           "commands": ["up", "down", "left", "right"]
         },
         {
@@ -75,7 +75,7 @@
         }
       ],
       "coefficients": {
-        "stage1": 115,
+        "commands": 115,
         "hero": 200,
         "final": 800
       },
@@ -104,8 +104,8 @@
       ],
       "stageRules": [
         {
-          "id": "stage1",
-          "label": "Первая команда",
+          "id": "commands",
+          "label": "Открытие команд",
           "commands": ["up", "down", "left", "right"]
         },
         {
@@ -120,7 +120,7 @@
         }
       ],
       "coefficients": {
-        "stage1": 115,
+        "commands": 115,
         "hero": 200,
         "final": 800
       },
@@ -149,8 +149,8 @@
       ],
       "stageRules": [
         {
-          "id": "stage1",
-          "label": "Первая команда",
+          "id": "commands",
+          "label": "Открытие команд",
           "commands": ["up", "down", "left", "right"]
         },
         {
@@ -165,7 +165,7 @@
         }
       ],
       "coefficients": {
-        "stage1": 115,
+        "commands": 115,
         "hero": 200,
         "final": 800
       },
@@ -194,8 +194,8 @@
       ],
       "stageRules": [
         {
-          "id": "stage1",
-          "label": "Первая команда",
+          "id": "commands",
+          "label": "Открытие команд",
           "commands": ["up", "down", "left", "right"]
         },
         {
@@ -210,7 +210,7 @@
         }
       ],
       "coefficients": {
-        "stage1": 115,
+        "commands": 115,
         "hero": 200,
         "final": 800
       },
