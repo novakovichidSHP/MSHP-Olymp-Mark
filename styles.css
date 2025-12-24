@@ -7,8 +7,8 @@
   --border: #d7d7e0;
   --panel: #ffffff;
   --scale: 1;
-  --cell-size-base: clamp(34px, 4.2vmin, 52px);
-  --cell-gap-base: clamp(3px, 0.6vmin, 6px);
+  --cell-size-base: clamp(32px, 3.8vmin, 48px);
+  --cell-gap-base: clamp(3px, 0.5vmin, 5px);
   --grid-columns: 10;
   --grid-rows: 8;
   --cell-size: calc(var(--cell-size-base) * var(--scale));
@@ -30,8 +30,8 @@ body {
 
 .page {
   min-height: 100vh;
-  padding: 20px;
-  max-width: 1280px;
+  padding: clamp(12px, 2vw, 20px);
+  max-width: 1440px;
   margin: 0 auto;
 }
 
@@ -103,10 +103,10 @@ body {
 
 .game__header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 360px);
+  gap: 16px;
   align-items: start;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .game__legend {
@@ -117,7 +117,7 @@ body {
 .game__controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
+  gap: 10px;
   align-items: end;
 }
 
@@ -136,15 +136,15 @@ body {
 
 .game__content {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  gap: 16px;
   align-items: start;
 }
 
 .board-wrapper {
   display: grid;
   grid-template-rows: auto auto auto;
-  gap: 12px;
+  gap: 10px;
   align-content: start;
 }
 
@@ -178,7 +178,7 @@ body {
   padding: 0;
   border: none;
   min-height: auto;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .grid {
@@ -187,8 +187,17 @@ body {
   height: calc(var(--cell-size) * var(--grid-rows) + var(--cell-gap) * (var(--grid-rows) - 1));
 }
 
-.cell {
+.grid-item {
   position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(
+    calc((var(--grid-x) - 1) * (var(--cell-size) + var(--cell-gap))),
+    calc((var(--grid-y) - 1) * (var(--cell-size) + var(--cell-gap)) + var(--grid-offset-y, 0px))
+  );
+}
+
+.cell {
   width: var(--cell-size);
   height: var(--cell-size);
   border: 2px solid #6f6f6f;
@@ -199,7 +208,6 @@ body {
 .hero,
 .object,
 .robot {
-  position: absolute;
   width: var(--cell-size);
   height: var(--cell-size);
   display: flex;
@@ -261,7 +269,6 @@ body {
 }
 
 .energy {
-  position: absolute;
   width: 22px;
   height: 22px;
   background: radial-gradient(circle, #ffe76b, #f7b500);
@@ -321,6 +328,9 @@ body {
   display: grid;
   gap: 14px;
   align-content: start;
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+  padding-right: 4px;
 }
 
 .panel {
