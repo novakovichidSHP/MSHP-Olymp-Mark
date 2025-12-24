@@ -7,8 +7,10 @@
   --border: #d7d7e0;
   --panel: #ffffff;
   --scale: 1;
-  --cell-size-base: 56px;
-  --cell-gap-base: 6px;
+  --cell-size-base: 52px;
+  --cell-gap-base: 5px;
+  --grid-columns: 10;
+  --grid-rows: 8;
   --cell-size: calc(var(--cell-size-base) * var(--scale));
   --cell-gap: calc(var(--cell-gap-base) * var(--scale));
 }
@@ -28,7 +30,7 @@ body {
 
 .page {
   min-height: 100vh;
-  padding: 32px 40px 60px;
+  padding: 24px 28px 32px;
 }
 
 .hidden {
@@ -133,21 +135,22 @@ body {
 
 .game__content {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 20px;
+  align-items: start;
 }
 
 .board-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .overseer {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   border-radius: 16px;
   border: 2px solid var(--border);
   background: #ffffff;
@@ -155,8 +158,8 @@ body {
 }
 
 .overseer img {
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
 }
 
@@ -177,8 +180,8 @@ body {
 
 .grid {
   position: relative;
-  width: calc(var(--cell-size) * 10 + var(--cell-gap) * 9);
-  height: calc(var(--cell-size) * 8 + var(--cell-gap) * 7);
+  width: calc(var(--cell-size) * var(--grid-columns) + var(--cell-gap) * (var(--grid-columns) - 1));
+  height: calc(var(--cell-size) * var(--grid-rows) + var(--cell-gap) * (var(--grid-rows) - 1));
 }
 
 .cell {
@@ -190,14 +193,9 @@ body {
   background: #ffffff;
 }
 
-.cell--target {
-  border-style: dashed;
-}
-
 .hero,
 .object,
-.robot,
-.badguy {
+.robot {
   position: absolute;
   width: var(--cell-size);
   height: var(--cell-size);
@@ -211,8 +209,7 @@ body {
 
 .hero img,
 .object img,
-.robot img,
-.badguy img {
+.robot img {
   max-width: 90%;
   max-height: 90%;
 }
@@ -243,9 +240,6 @@ body {
   z-index: 4;
 }
 
-.badguy {
-  z-index: 3;
-}
 
 .object--stone {
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
@@ -281,7 +275,7 @@ body {
 .team {
   background: #fff;
   border-radius: 16px;
-  padding: 16px;
+  padding: 14px;
   border: 2px solid var(--border);
 }
 
@@ -329,12 +323,12 @@ body {
 .panel {
   background: var(--panel);
   border-radius: 20px;
-  padding: 16px;
+  padding: 14px;
   border: 2px solid var(--border);
 }
 
 .panel--program {
-  min-height: 260px;
+  min-height: 220px;
 }
 
 .panel--commands {
@@ -355,7 +349,7 @@ body {
 }
 
 .program {
-  min-height: 160px;
+  min-height: 140px;
   margin: 0 0 12px;
   padding-left: 20px;
 }
@@ -399,11 +393,20 @@ body {
 }
 
 @media (max-height: 900px) {
+  :root {
+    --cell-size-base: 46px;
+    --cell-gap-base: 4px;
+  }
+
   .page {
-    padding: 20px 24px 32px;
+    padding: 16px 20px 24px;
   }
 
   .game__header {
     margin-bottom: 12px;
+  }
+
+  .game__controls {
+    gap: 12px;
   }
 }
