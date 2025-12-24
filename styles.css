@@ -13,6 +13,7 @@
   --grid-rows: 8;
   --cell-size: calc(var(--cell-size-base) * var(--scale));
   --cell-gap: calc(var(--cell-gap-base) * var(--scale));
+  --team-slot: 92px;
 }
 
 * {
@@ -24,7 +25,8 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .page {
@@ -159,23 +161,11 @@ body {
 
 .game__layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 260px) minmax(260px, 360px);
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+  gap: 20px;
   align-items: start;
   flex: 1;
   min-height: 0;
-}
-
-.game__info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-self: stretch;
-  padding-top: 0;
-}
-
-.panel--costs {
-  align-self: stretch;
 }
 
 .board-area {
@@ -188,8 +178,9 @@ body {
 
 .board-area__field {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  gap: 24px;
+  gap: 16px;
   min-height: 320px;
   position: relative;
 }
@@ -203,8 +194,8 @@ body {
   border: none;
   background: transparent;
   width: fit-content;
-  max-width: 180px;
-  margin-top: 18px;
+  max-width: 220px;
+  margin-top: 0;
 }
 
 .overseer img {
@@ -376,7 +367,7 @@ body {
 .team__heroes {
   position: relative;
   display: flex;
-  gap: 14px;
+  gap: 0;
   align-items: flex-end;
   padding: 28px 12px 36px;
   border-radius: 16px;
@@ -395,7 +386,7 @@ body {
   bottom: 10px;
   height: 16px;
   background-image: radial-gradient(ellipse at center, #3b49c9 0 50%, transparent 55%);
-  background-size: 80px 18px;
+  background-size: var(--team-slot) 18px;
   background-repeat: repeat-x;
   opacity: 0.8;
 }
@@ -416,7 +407,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80px;
+  width: var(--team-slot);
   font-size: 11px;
   position: relative;
   z-index: 1;
@@ -446,11 +437,16 @@ body {
   border: 2px solid var(--border);
 }
 
+.panel--costs {
+  grid-column: 1 / -1;
+  padding: 10px 12px;
+}
+
 .panel--program {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 320px;
+  min-height: 260px;
   border-color: #3b49c9;
   grid-column: 1 / -1;
 }
@@ -470,7 +466,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .program {
