@@ -1,0 +1,19 @@
+{
+  "programs": {
+    "J3": {
+      "stage1": 115,
+      "hero": 200,
+      "final": 800
+    },
+    "J4": {
+      "stage1": 115,
+      "hero": 200,
+      "final": 800
+    },
+    "P3": {
+      "stage1": 115,
+      "hero": 200,
+      "final": 800
+    }
+  }
+}
