@@ -24,6 +24,8 @@ const seasonStep = document.getElementById("seasonStep");
 const programStep = document.getElementById("programStep");
 const programButtons = document.getElementById("programButtons");
 const backToSeasonBtn = document.getElementById("backToSeason");
+const isMenuPage = Boolean(menu);
+const isGamePage = Boolean(game);
 
 let config = null;
 let boardConfig = null;
@@ -102,8 +104,17 @@ function selectVariant(variantId) {
     scale: state?.scale ?? nextState.scale
   };
   saveState();
-  menu.classList.add("hidden");
-  game.classList.remove("hidden");
+  if (isMenuPage && !isGamePage) {
+    const params = new URLSearchParams({ variant: variantId });
+    window.location.href = `game.html?${params.toString()}`;
+    return;
+  }
+  if (menu) {
+    menu.classList.add("hidden");
+  }
+  if (game) {
+    game.classList.remove("hidden");
+  }
   setupGame();
 }
 
@@ -114,6 +125,9 @@ function resetState() {
 }
 
 function setupGame() {
+  if (!isGamePage) {
+    return;
+  }
   studentsInput.value = state.students;
   pointsInput.value = state.points;
   scaleInput.value = state.scale;
@@ -158,6 +172,9 @@ function getCommandCost(commandId) {
 }
 
 function renderCommandCosts() {
+  if (!costsList) {
+    return;
+  }
   costsList.innerHTML = "";
   getCommandDefinitions().forEach((command) => {
     const item = document.createElement("li");
@@ -184,6 +201,9 @@ function renderOverseer() {
 }
 
 function updateCommands() {
+  if (!lockedCommandsEl || !availableCommandsEl) {
+    return;
+  }
   lockedCommandsEl.innerHTML = "";
   availableCommandsEl.innerHTML = "";
 
@@ -204,7 +224,7 @@ function updateCommands() {
 
 function renderBoard() {
   const variant = getBoardVariant();
-  if (!variant?.grid) {
+  if (!variant?.grid || !board) {
     return;
   }
   board.innerHTML = "";
@@ -287,6 +307,9 @@ function placeAt(element, position, offsetY = 0, isTiny = false) {
 }
 
 function renderProgram() {
+  if (!programEl) {
+    return;
+  }
   programEl.innerHTML = "";
   state.program.forEach((commandId, index) => {
     const command = getCommandDefinitions().find((item) => item.id === commandId);
@@ -301,6 +324,9 @@ function renderProgram() {
 }
 
 function renderTeam() {
+  if (!teamHeroes || !heroTemplate) {
+    return;
+  }
   teamHeroes.querySelectorAll(".team__hero:not([data-hero='supershish'])").forEach((hero) => hero.remove());
   state.acquiredHeroes.forEach((heroId) => {
     const hero = getHeroes().find((item) => item.id === heroId);
@@ -405,6 +431,9 @@ function executeCommand(commandId) {
 }
 
 function flashHero(heroId) {
+  if (!board) {
+    return;
+  }
   const heroEl = board.querySelector(`.hero[data-hero='${heroId}']`);
   if (heroEl) {
     heroEl.classList.add("hero--flash");
@@ -413,6 +442,9 @@ function flashHero(heroId) {
 }
 
 function moveRobot() {
+  if (!robotEl) {
+    return;
+  }
   placeAt(robotEl, state.position);
   saveState();
 }
@@ -478,6 +510,8 @@ async function init() {
   config = await configResponse.json();
   boardConfig = await boardResponse.json();
   state = loadState();
+  const urlParams = new URLSearchParams(window.location.search);
+  const variantParam = urlParams.get("variant");
 
   const seasonPrograms = {
     winter: ["J3", "J4"],
@@ -485,12 +519,18 @@ async function init() {
   };
 
   function showSeasonSelection() {
+    if (!seasonStep || !programStep || !programButtons) {
+      return;
+    }
     seasonStep.classList.remove("hidden");
     programStep.classList.add("hidden");
     programButtons.innerHTML = "";
   }
 
   function showProgramSelection(season) {
+    if (!seasonStep || !programStep || !programButtons) {
+      return;
+    }
     seasonStep.classList.add("hidden");
     programStep.classList.remove("hidden");
     programButtons.innerHTML = "";
@@ -508,32 +548,64 @@ async function init() {
     });
   }
 
-  document.querySelectorAll("[data-season]").forEach((button) => {
-    button.addEventListener("click", () => showProgramSelection(button.dataset.season));
-  });
+  if (isMenuPage) {
+    document.querySelectorAll("[data-season]").forEach((button) => {
+      button.addEventListener("click", () => showProgramSelection(button.dataset.season));
+    });
+  }
 
-  backToSeasonBtn.addEventListener("click", showSeasonSelection);
+  if (backToSeasonBtn) {
+    backToSeasonBtn.addEventListener("click", showSeasonSelection);
+  }
 
-  backBtn.addEventListener("click", () => {
-    menu.classList.remove("hidden");
-    game.classList.add("hidden");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  }
+
+  if (studentsInput) {
+    studentsInput.addEventListener("input", handleInputChange);
+  }
+  if (pointsInput) {
+    pointsInput.addEventListener("input", handleInputChange);
+  }
+  if (scaleInput) {
+    scaleInput.addEventListener("input", handleScale);
+  }
+  if (clearBtn) {
+    clearBtn.addEventListener("click", clearProgram);
+  }
+  if (runBtn) {
+    runBtn.addEventListener("click", runProgram);
+  }
+  if (stepBtn) {
+    stepBtn.addEventListener("click", stepProgram);
+  }
+  if (resetBtn) {
+    resetBtn.addEventListener("click", handleReset);
+  }
+
+  if (isMenuPage && !isGamePage) {
+    if (state.selectedVariant) {
+      const params = new URLSearchParams({ variant: state.selectedVariant });
+      window.location.href = `game.html?${params.toString()}`;
+      return;
+    }
     showSeasonSelection();
-  });
+    return;
+  }
 
-  studentsInput.addEventListener("input", handleInputChange);
-  pointsInput.addEventListener("input", handleInputChange);
-  scaleInput.addEventListener("input", handleScale);
-  clearBtn.addEventListener("click", clearProgram);
-  runBtn.addEventListener("click", runProgram);
-  stepBtn.addEventListener("click", stepProgram);
-  resetBtn.addEventListener("click", handleReset);
-
-  if (state.selectedVariant) {
-    menu.classList.add("hidden");
-    game.classList.remove("hidden");
+  if (isGamePage) {
+    if (variantParam && variantParam !== state.selectedVariant) {
+      selectVariant(variantParam);
+      return;
+    }
+    if (!state.selectedVariant) {
+      window.location.href = "index.html";
+      return;
+    }
     setupGame();
-  } else {
-    showSeasonSelection();
   }
 }
 
