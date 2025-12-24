@@ -249,22 +249,22 @@ function renderBoard() {
 
   uniquePath.forEach((cell) => {
     const cellEl = document.createElement("div");
-    cellEl.className = "cell";
-    placeAt(cellEl, cell);
+    cellEl.className = "cell grid-item";
+    setGridPosition(cellEl, cell);
     grid.appendChild(cellEl);
   });
 
   if (variant.grid.stone) {
     const stone = createPiece("object", "pictures/stone.jpg", "Камень");
     stone.classList.add("object--stone");
-    placeAt(stone, variant.grid.stone);
+    setGridPosition(stone, variant.grid.stone);
     grid.appendChild(stone);
   }
 
   if (variant.grid.box) {
     const box = createPiece("object", "pictures/box.png", "Ящик");
     box.classList.add("object--box");
-    placeAt(box, variant.grid.box);
+    setGridPosition(box, variant.grid.box);
     const lock = document.createElement("img");
     lock.src = "pictures/lock.jpg";
     lock.alt = "Замок";
@@ -279,20 +279,20 @@ function renderBoard() {
     if (state.acquiredHeroes.includes(hero.id)) {
       heroEl.classList.add("hero--acquired");
     }
-    placeAt(heroEl, hero.position);
+    setGridPosition(heroEl, hero.position);
     grid.appendChild(heroEl);
 
     if (state.boxOpened && state.acquiredHeroes.includes(hero.id)) {
       const energy = document.createElement("div");
-      energy.className = "energy";
-      placeAt(energy, { x: hero.position.x + 0.35, y: hero.position.y - 0.15 }, 0, true);
+      energy.className = "energy grid-item";
+      setGridPosition(energy, { x: hero.position.x + 0.35, y: hero.position.y - 0.15 });
       grid.appendChild(energy);
     }
   });
 
   robotEl = createPiece("robot", "pictures/mini-robot.png", "Робот");
   robotEl.classList.add("robot");
-  placeAt(robotEl, state.position);
+  setGridPosition(robotEl, state.position);
   grid.appendChild(robotEl);
 
   board.appendChild(grid);
@@ -300,7 +300,7 @@ function renderBoard() {
 
 function createPiece(className, imgSrc, label) {
   const piece = document.createElement("div");
-  piece.className = className;
+  piece.className = `${className} grid-item`;
   const img = document.createElement("img");
   img.src = imgSrc;
   img.alt = label;
@@ -308,22 +308,10 @@ function createPiece(className, imgSrc, label) {
   return piece;
 }
 
-function placeAt(element, position, offsetY = 0, isTiny = false) {
-  const size = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--cell-size"));
-  const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--cell-gap"));
-  const x = (position.x - 1) * (size + gap);
-  const y = (position.y - 1) * (size + gap) + offsetY;
-
-  if (element.classList.contains("robot")) {
-    element.style.transform = `translate(${x}px, ${y}px)`;
-  } else {
-    element.style.left = `${x}px`;
-    element.style.top = `${y}px`;
-  }
-  if (isTiny) {
-    element.style.width = "22px";
-    element.style.height = "22px";
-  }
+function setGridPosition(element, position, offsetY = 0) {
+  element.style.setProperty("--grid-x", position.x);
+  element.style.setProperty("--grid-y", position.y);
+  element.style.setProperty("--grid-offset-y", `${offsetY}px`);
 }
 
 function renderProgram() {
@@ -465,7 +453,7 @@ function moveRobot() {
   if (!robotEl) {
     return;
   }
-  placeAt(robotEl, state.position);
+  setGridPosition(robotEl, state.position);
   saveState();
 }
 
