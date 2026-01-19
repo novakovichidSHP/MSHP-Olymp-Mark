@@ -49,10 +49,10 @@
         "left": 150,
         "right": 300,
         "down": 500,
-        "jump": 600,
-        "decorate": 700,
+        "jump": 400,
+        "decorate": 100,
         "boost": 800,
-        "box": 1000
+        "box": 900
       }
     },
     "winter-j3": {
