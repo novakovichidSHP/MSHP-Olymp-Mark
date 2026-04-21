@@ -252,15 +252,23 @@ function updateBoardScale() {
   const baseCell = parseFloat(rootStyles.getPropertyValue("--cell-size-base")) || 36;
   const baseGap = parseFloat(rootStyles.getPropertyValue("--cell-gap-base")) || 4;
   const { columns, rows } = getGridMetrics(variant);
-  const overflowPadding = baseCell * 0.12;
+  const fieldStyles = getComputedStyle(field);
+  const horizontalPadding =
+    parseFloat(fieldStyles.paddingLeft) + parseFloat(fieldStyles.paddingRight);
+  const verticalPadding =
+    parseFloat(fieldStyles.paddingTop) + parseFloat(fieldStyles.paddingBottom);
+  const fitWidth = Math.max(0, availableWidth - horizontalPadding);
+  const fitHeight = Math.max(0, availableHeight - verticalPadding);
+  const isFullscreen = document.body.classList.contains("is-fullscreen");
+  const overflowPadding = baseCell * (isFullscreen ? 0.25 : 0.8);
   const totalWidth = columns * baseCell + (columns - 1) * baseGap + overflowPadding;
   const totalHeight = rows * baseCell + (rows - 1) * baseGap + overflowPadding;
-  const isFullscreen = document.body.classList.contains("is-fullscreen");
   const scale = isFullscreen
-    ? availableHeight / totalHeight
-    : Math.min(availableWidth / totalWidth, availableHeight / totalHeight);
-  const paddedScale = scale * 0.98;
-  const nextScale = Math.max(0.6, Math.min(paddedScale, 3));
+    ? fitHeight / totalHeight
+    : Math.min(fitWidth / totalWidth, fitHeight / totalHeight);
+  const paddedScale = scale * (isFullscreen ? 0.98 : 0.94);
+  const maxScale = isFullscreen ? 3 : 2.35;
+  const nextScale = Math.max(0.55, Math.min(paddedScale, maxScale));
   document.body.style.setProperty("--scale", nextScale.toFixed(3));
 }
 

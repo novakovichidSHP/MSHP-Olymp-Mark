@@ -182,6 +182,7 @@ body {
   flex-direction: column;
   align-items: stretch;
   gap: 16px;
+  padding: clamp(4px, 0.8vmin, 10px);
   min-height: 0;
   position: relative;
   width: 100%;
@@ -295,6 +296,7 @@ body {
   align-items: center;
   flex: 1;
   min-height: 0;
+  min-width: 0;
 }
 
 .grid {
