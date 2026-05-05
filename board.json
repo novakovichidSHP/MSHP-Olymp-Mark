@@ -44,8 +44,8 @@
     },
     "player": {
       "img": "pictures/spring-player.png",
-      "width": 124.4,
-      "height": 136,
+      "width": 105.74,
+      "height": 115.6,
       "layer": 36
     },
     "boss": {
