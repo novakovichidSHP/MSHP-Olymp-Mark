@@ -472,7 +472,7 @@ function getBattleMinionThreshold(battle, minionIndex) {
 
 function getDefeatedMinionsCount(battle) {
   const score = getCurrentScore();
-  return (battle?.minions ?? []).filter((minion) => score >= getBattleMinionThreshold(battle, minion.index)).length;
+  return (battle?.minions ?? []).filter((minion) => score > getBattleMinionThreshold(battle, minion.index)).length;
 }
 
 function isBattleBossDefeated(battle = getSpringBattleConfig()) {
@@ -534,7 +534,7 @@ function renderSpringBattle() {
       hidden: bossDefeated
     },
     ...(battle.minions ?? []).map((minion) => {
-      const defeated = score >= getBattleMinionThreshold(battle, minion.index);
+      const defeated = score > getBattleMinionThreshold(battle, minion.index);
       return {
         ...battle.minionAsset,
         ...minion,
@@ -568,14 +568,13 @@ function renderSpringBattle() {
 
   const hud = document.createElement("div");
   hud.className = "spring-battle__hud";
-  const minionsGoal = battle.thresholds?.minionsVictory * students;
   const bossGoal = battle.thresholds?.bossVictory * students;
   const chips = [
     `Счёт ${formatScore(score)}`,
     `Приспешники ${minionsDefeated}/${minionsTotal}`,
     bossDefeated ? "Плохишиш побеждён" : `Плохишиш ${formatScore(bossGoal)}`
   ];
-  if (score >= minionsGoal && !bossDefeated) {
+  if (minionsDefeated === minionsTotal && !bossDefeated) {
     chips.splice(2, 0, "Приспешники побеждены");
   }
   chips.forEach((text) => {
