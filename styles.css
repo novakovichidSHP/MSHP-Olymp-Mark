@@ -315,6 +315,118 @@ body {
   max-height: 100%;
 }
 
+.spring-battle {
+  position: relative;
+  width: min(100%, calc((100vh - 96px) * 4 / 3));
+  max-height: 100%;
+  aspect-ratio: var(--spring-stage-width, 480) / var(--spring-stage-height, 360);
+  overflow: hidden;
+  border: 2px solid #88b98f;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, #bfe9ff 0%, #eaf9f0 42%, #8fd37a 43%, #5fb363 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.spring-sprite {
+  position: absolute;
+  left: var(--spring-x);
+  top: var(--spring-y);
+  width: var(--spring-width);
+  height: var(--spring-height);
+  z-index: var(--spring-layer);
+  transform: translate(-50%, -50%) rotate(var(--spring-rotation, 0deg));
+  transition: left 0.45s ease, top 0.45s ease;
+  pointer-events: none;
+}
+
+.spring-sprite__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+}
+
+.spring-sprite--boss .spring-sprite__img,
+.spring-sprite--minion .spring-sprite__img {
+  animation: springFloat 1s ease-in-out infinite;
+  animation-delay: var(--spring-float-delay, 0s);
+}
+
+.spring-sprite--boss .spring-sprite__img {
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.3));
+}
+
+.spring-sprite--player {
+  z-index: 36;
+}
+
+.spring-sprite--player .spring-sprite__img {
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.22));
+}
+
+.spring-sprite--gone .spring-sprite__img {
+  opacity: 0;
+  transform: scale(1.35);
+  filter: saturate(1.4) hue-rotate(35deg);
+}
+
+.spring-battle__hud {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.spring-battle__hud span {
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(35, 69, 43, 0.35);
+  background: rgba(255, 255, 255, 0.86);
+  color: #1b3a22;
+  font-size: clamp(10px, 1.2vw, 13px);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+body.score-battle-mode .game__layout {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+}
+
+body.score-battle-mode .game__tools,
+body.score-battle-mode .board-area__bottom {
+  display: none;
+}
+
+body.score-battle-mode .board-area {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+body.score-battle-mode .board-area__field {
+  justify-content: center;
+  overflow: hidden;
+}
+
+body.score-battle-mode .board {
+  align-items: center;
+  justify-content: center;
+}
+
+body.score-battle-mode .game__controls {
+  grid-template-columns: 1fr;
+}
+
+@keyframes springFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
 .grid-item {
   position: absolute;
   top: 0;

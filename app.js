@@ -2,6 +2,8 @@ const STORAGE_KEY = "mshp-olymp-state";
 const CONFIG_URL = "config.json";
 const BOARD_URL = "board.json";
 const DEFAULT_FINAL_MESSAGE = "Сила команды раскрыта — герои готовы к финальной битве.";
+const SCORE_BATTLE_MODE = "score-battle";
+const SPRING_BATTLE_TYPE = "spring-battle";
 
 const menu = document.getElementById("menu");
 const game = document.getElementById("game");
@@ -26,6 +28,9 @@ const seasonStep = document.getElementById("seasonStep");
 const programStep = document.getElementById("programStep");
 const programButtons = document.getElementById("programButtons");
 const backToSeasonBtn = document.getElementById("backToSeason");
+const gameIntroTitle = document.querySelector(".game__intro h2");
+const gameLegend = document.querySelector(".game__legend");
+const costsTitle = document.querySelector(".panel--costs h3");
 const isMenuPage = Boolean(menu);
 const isGamePage = Boolean(game);
 
@@ -45,6 +50,34 @@ function getVariantConfig(variantId = state?.selectedVariant) {
 
 function getBoardVariant(variantId = state?.selectedVariant) {
   return boardConfig?.variants?.[variantId] ?? null;
+}
+
+function getVariantMode(variantId = state?.selectedVariant) {
+  const variantConfig = getVariantConfig(variantId);
+  const boardVariant = getBoardVariant(variantId);
+  return variantConfig?.mode ?? boardVariant?.type ?? null;
+}
+
+function isScoreBattleVariant(variantId = state?.selectedVariant) {
+  return getVariantMode(variantId) === SCORE_BATTLE_MODE || getVariantMode(variantId) === SPRING_BATTLE_TYPE;
+}
+
+function getSpringBattleConfig() {
+  return getBoardVariant()?.battle ?? boardConfig?.springBattle ?? null;
+}
+
+function getPositiveStudents() {
+  const students = Number(state?.students);
+  return Number.isFinite(students) && students > 0 ? students : 1;
+}
+
+function getCurrentScore() {
+  const score = Number(state?.points);
+  return Number.isFinite(score) && score > 0 ? score : 0;
+}
+
+function formatScore(value) {
+  return new Intl.NumberFormat("ru-RU").format(Math.max(0, Math.round(value)));
 }
 
 function getSupershishPlacement(variant = getBoardVariant()) {
@@ -220,6 +253,7 @@ function setupGame() {
   if (!isGamePage) {
     return;
   }
+  updateVariantChrome();
   studentsInput.value = state.students;
   pointsInput.value = state.points;
   renderOverseer();
@@ -234,12 +268,32 @@ function setupGame() {
   updateBoardScale();
 }
 
+function updateVariantChrome() {
+  const scoreBattle = isScoreBattleVariant();
+  document.body.classList.toggle("score-battle-mode", scoreBattle);
+  if (gameIntroTitle) {
+    gameIntroTitle.textContent = scoreBattle ? "Весенняя битва с Плохишишем!" : "Соберём команду героев!";
+  }
+  if (gameLegend) {
+    gameLegend.textContent = scoreBattle
+      ? "Набирайте баллы группы: 400 на ученика побеждают приспешников, 600 на ученика побеждают Плохишиша."
+      : "Управляйте роботом, открывайте команды и собирайте супергероев МШП.";
+  }
+  if (costsTitle) {
+    costsTitle.textContent = scoreBattle ? "Цели битвы" : "Стоимость команд";
+  }
+}
+
 function updateBoardScale() {
   if (!isGamePage) {
     return;
   }
   const field = document.querySelector(".board-area__field");
   const variant = getBoardVariant();
+  if (isScoreBattleVariant()) {
+    document.body.style.removeProperty("--scale");
+    return;
+  }
   if (!field || !variant?.grid) {
     return;
   }
@@ -291,6 +345,11 @@ function updateThresholds() {
   if (!variantConfig) {
     return;
   }
+  if (isScoreBattleVariant()) {
+    state.availableCommands = [];
+    saveState();
+    return;
+  }
   const commandCosts = variantConfig.commandCosts ?? {};
   const hasCosts = Object.keys(commandCosts).length > 0;
   if (hasCosts) {
@@ -316,6 +375,30 @@ function renderCommandCosts() {
     return;
   }
   costsList.innerHTML = "";
+  if (isScoreBattleVariant()) {
+    const battle = getSpringBattleConfig();
+    const thresholds = battle?.thresholds;
+    const students = getPositiveStudents();
+    const pathScores = thresholds?.player
+      ?.filter((step) => step.score > 0)
+      .map((step) => step.score)
+      .join(" / ");
+    const goals = [
+      pathScores ? `Путь героя — ${pathScores} × ${students}` : null,
+      thresholds?.minionsVictory
+        ? `Победа над приспешниками — ${formatScore(thresholds.minionsVictory * students)}`
+        : null,
+      thresholds?.bossVictory
+        ? `Победа над Плохишишем — ${formatScore(thresholds.bossVictory * students)}`
+        : null
+    ].filter(Boolean);
+    goals.forEach((goal) => {
+      const item = document.createElement("li");
+      item.textContent = goal;
+      costsList.appendChild(item);
+    });
+    return;
+  }
   getCommandDefinitions().forEach((command) => {
     const item = document.createElement("li");
     const cost = getCommandCost(command.id) * state.students;
@@ -326,10 +409,15 @@ function renderCommandCosts() {
 
 function renderOverseer() {
   const variant = getBoardVariant();
-  if (!overseer || !variant?.overseer) {
+  if (!overseer) {
     return;
   }
   overseer.innerHTML = "";
+  if (!variant?.overseer || isScoreBattleVariant()) {
+    overseer.hidden = true;
+    return;
+  }
+  overseer.hidden = false;
   const img = document.createElement("img");
   img.src = variant.overseer.img;
   img.alt = variant.overseer.name;
@@ -345,6 +433,9 @@ function updateCommands() {
     return;
   }
   commandsEl.innerHTML = "";
+  if (isScoreBattleVariant()) {
+    return;
+  }
 
   getCommandDefinitions().forEach((command) => {
     const isAvailable = state.availableCommands.includes(command.id);
@@ -362,8 +453,146 @@ function updateCommands() {
   });
 }
 
+function getBattlePlayerPosition(battle) {
+  const steps = battle?.thresholds?.player ?? [];
+  const students = getPositiveStudents();
+  const score = getCurrentScore();
+  return steps.reduce((current, step) => {
+    if (score >= step.score * students) {
+      return step;
+    }
+    return current;
+  }, steps[0] ?? { x: 0, y: 0, score: 0 });
+}
+
+function getBattleMinionThreshold(battle, minionIndex) {
+  const thresholds = battle?.thresholds ?? {};
+  return (thresholds.minionStart + thresholds.minionStep * minionIndex) * getPositiveStudents();
+}
+
+function getDefeatedMinionsCount(battle) {
+  const score = getCurrentScore();
+  return (battle?.minions ?? []).filter((minion) => score >= getBattleMinionThreshold(battle, minion.index)).length;
+}
+
+function isBattleBossDefeated(battle = getSpringBattleConfig()) {
+  const victory = battle?.thresholds?.bossVictory;
+  return Number.isFinite(victory) && getCurrentScore() >= victory * getPositiveStudents();
+}
+
+function toScratchPercent(value, axisSize, axis = "x") {
+  if (axis === "y") {
+    return ((axisSize / 2 - value) / axisSize) * 100;
+  }
+  return ((value + axisSize / 2) / axisSize) * 100;
+}
+
+function createSpringSprite(sprite, stage, extraClassName = "") {
+  const element = document.createElement("div");
+  element.className = ["spring-sprite", sprite.className, extraClassName].filter(Boolean).join(" ");
+  element.style.setProperty("--spring-x", `${toScratchPercent(sprite.x, stage.width)}%`);
+  element.style.setProperty("--spring-y", `${toScratchPercent(sprite.y, stage.height, "y")}%`);
+  element.style.setProperty("--spring-width", `${(sprite.width / stage.width) * 100}%`);
+  element.style.setProperty("--spring-height", `${(sprite.height / stage.height) * 100}%`);
+  element.style.setProperty("--spring-rotation", `${sprite.rotation ?? 0}deg`);
+  element.style.setProperty("--spring-layer", sprite.layer ?? 1);
+  if (Number.isFinite(sprite.floatDelay)) {
+    element.style.setProperty("--spring-float-delay", `${sprite.floatDelay}s`);
+  }
+  const img = document.createElement("img");
+  img.className = "spring-sprite__img";
+  img.src = sprite.img;
+  img.alt = sprite.label ?? "";
+  element.appendChild(img);
+  return element;
+}
+
+function renderSpringBattle() {
+  const battle = getSpringBattleConfig();
+  if (!battle || !board) {
+    return;
+  }
+  board.innerHTML = "";
+  const stage = battle.stage ?? { width: 480, height: 360 };
+  const score = getCurrentScore();
+  const students = getPositiveStudents();
+  const bossDefeated = isBattleBossDefeated(battle);
+  const minionsDefeated = getDefeatedMinionsCount(battle);
+  const minionsTotal = battle.minions?.length ?? 0;
+
+  const scene = document.createElement("div");
+  scene.className = "spring-battle";
+  scene.style.setProperty("--spring-stage-width", stage.width);
+  scene.style.setProperty("--spring-stage-height", stage.height);
+
+  const sprites = [
+    ...(battle.decorations ?? []),
+    {
+      ...battle.boss,
+      label: "Плохишиш",
+      className: "spring-sprite--boss",
+      hidden: bossDefeated
+    },
+    ...(battle.minions ?? []).map((minion) => {
+      const defeated = score >= getBattleMinionThreshold(battle, minion.index);
+      return {
+        ...battle.minionAsset,
+        ...minion,
+        label: `Приспешник ${minion.index + 1}`,
+        className: "spring-sprite--minion",
+        hidden: defeated,
+        floatDelay: (minion.index % 4) * 0.15
+      };
+    }),
+    {
+      ...battle.player,
+      ...getBattlePlayerPosition(battle),
+      label: "Игрок",
+      className: "spring-sprite--player"
+    }
+  ].filter((sprite) => sprite?.img);
+
+  sprites
+    .sort((first, second) => (first.layer ?? 0) - (second.layer ?? 0))
+    .forEach((sprite) => {
+      const spriteEl = createSpringSprite(
+        sprite,
+        stage,
+        sprite.hidden ? "spring-sprite--gone" : ""
+      );
+      if (sprite.hidden) {
+        spriteEl.setAttribute("aria-hidden", "true");
+      }
+      scene.appendChild(spriteEl);
+    });
+
+  const hud = document.createElement("div");
+  hud.className = "spring-battle__hud";
+  const minionsGoal = battle.thresholds?.minionsVictory * students;
+  const bossGoal = battle.thresholds?.bossVictory * students;
+  const chips = [
+    `Счёт ${formatScore(score)}`,
+    `Приспешники ${minionsDefeated}/${minionsTotal}`,
+    bossDefeated ? "Плохишиш побеждён" : `Плохишиш ${formatScore(bossGoal)}`
+  ];
+  if (score >= minionsGoal && !bossDefeated) {
+    chips.splice(2, 0, "Приспешники побеждены");
+  }
+  chips.forEach((text) => {
+    const chip = document.createElement("span");
+    chip.textContent = text;
+    hud.appendChild(chip);
+  });
+  scene.appendChild(hud);
+  board.appendChild(scene);
+}
+
 function renderBoard() {
   const variant = getBoardVariant();
+  if (isScoreBattleVariant()) {
+    renderSpringBattle();
+    return;
+  }
   if (!variant?.grid || !board) {
     return;
   }
@@ -481,23 +710,30 @@ function renderFinale() {
     return;
   }
   const variantMessage = getBoardVariant()?.finalMessage ?? DEFAULT_FINAL_MESSAGE;
+  const scoreBattle = isScoreBattleVariant();
+  const finaleActive = scoreBattle ? isBattleBossDefeated() : Boolean(state.boxOpened);
+  const finaleTitle = scoreBattle ? "Плохишиш побеждён!" : "Ящик открыт!";
   if (!finaleEl) {
     finaleEl = document.createElement("div");
     finaleEl.className = "finale";
     finaleEl.innerHTML = `
       <div class="finale__burst"></div>
       <div class="finale__card">
-        <h4>Ящик открыт!</h4>
+        <h4></h4>
         <p class="finale__message"></p>
       </div>
     `;
     field.appendChild(finaleEl);
   }
+  const titleEl = finaleEl.querySelector("h4");
+  if (titleEl) {
+    titleEl.textContent = finaleTitle;
+  }
   const messageEl = finaleEl.querySelector(".finale__message");
   if (messageEl) {
     messageEl.textContent = variantMessage;
   }
-  finaleEl.classList.toggle("finale--active", Boolean(state.boxOpened));
+  finaleEl.classList.toggle("finale--active", finaleActive);
 }
 
 function createPiece(className, imgSrc, label) {
@@ -535,6 +771,10 @@ function renderProgram() {
 
 function renderTeam() {
   if (!teamHeroes || !heroTemplate) {
+    return;
+  }
+  if (isScoreBattleVariant()) {
+    teamHeroes.innerHTML = "";
     return;
   }
   const supershishPlacement = getSupershishPlacement();
@@ -782,6 +1022,10 @@ function handleInputChange() {
   updateThresholds();
   renderCommandCosts();
   updateCommands();
+  if (isScoreBattleVariant()) {
+    renderBoard();
+    renderFinale();
+  }
 }
 
 function handleReset() {

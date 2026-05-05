@@ -167,6 +167,7 @@
     },
     "spring-j3": {
       "label": "Весенняя Олимпиада — J3",
+      "mode": "score-battle",
       "commands": [
         {
           "id": "up",
@@ -222,6 +223,7 @@
     },
     "spring-j4": {
       "label": "Весенняя Олимпиада — J4",
+      "mode": "score-battle",
       "commands": [
         {
           "id": "up",

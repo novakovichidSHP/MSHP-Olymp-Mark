@@ -1,4 +1,340 @@
 {
+  "springBattle": {
+    "stage": {
+      "width": 480,
+      "height": 360
+    },
+    "thresholds": {
+      "player": [
+        {
+          "score": 0,
+          "x": -171,
+          "y": -145
+        },
+        {
+          "score": 40,
+          "x": -114,
+          "y": -136
+        },
+        {
+          "score": 80,
+          "x": -76,
+          "y": -84
+        },
+        {
+          "score": 120,
+          "x": -38,
+          "y": -58
+        },
+        {
+          "score": 140,
+          "x": -2,
+          "y": -27
+        },
+        {
+          "score": 160,
+          "x": -14,
+          "y": 28
+        }
+      ],
+      "minionStart": 160,
+      "minionStep": 20,
+      "minionsVictory": 400,
+      "bossVictory": 600
+    },
+    "player": {
+      "img": "pictures/spring-player.png",
+      "width": 124.4,
+      "height": 136,
+      "layer": 36
+    },
+    "boss": {
+      "img": "pictures/spring-badshish.png",
+      "x": -17,
+      "y": 153,
+      "width": 360,
+      "height": 360,
+      "layer": 2
+    },
+    "decorations": [
+      {
+        "id": "river",
+        "img": "pictures/spring-river.png",
+        "x": 4.529411764705898,
+        "y": -13.529411764705884,
+        "width": 768,
+        "height": 377.6,
+        "layer": 1,
+        "className": "spring-sprite--river"
+      },
+      {
+        "id": "tree-1",
+        "img": "pictures/spring-tree.png",
+        "x": -200,
+        "y": 25.88235294117647,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 4,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-2",
+        "img": "pictures/spring-tree.png",
+        "x": -218.97526702075606,
+        "y": -8.148280904965198,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 6,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-3",
+        "img": "pictures/spring-tree.png",
+        "x": -193.98552403180457,
+        "y": -10.495587870423854,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 10,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-4",
+        "img": "pictures/spring-tree.png",
+        "x": -223.1082592011924,
+        "y": 28.46288573727864,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 3,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-5",
+        "img": "pictures/spring-tree.png",
+        "x": -184.44958441989903,
+        "y": -0.08628484255981306,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 9,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-6",
+        "img": "pictures/spring-tree.png",
+        "x": -235.87542168018362,
+        "y": 0.0876211332748369,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 5,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-7",
+        "img": "pictures/spring-tree.png",
+        "x": 196.2109227469444,
+        "y": -10.595198457887832,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 13,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-8",
+        "img": "pictures/spring-tree.png",
+        "x": 212.7533702371305,
+        "y": 4.652502949432661,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 12,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-9",
+        "img": "pictures/spring-tree.png",
+        "x": 236.7900609497638,
+        "y": 33.15041013694391,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 7,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-10",
+        "img": "pictures/spring-tree.png",
+        "x": 225.6570378243997,
+        "y": 19.473628997895833,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 8,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-11",
+        "img": "pictures/spring-tree.png",
+        "x": 230.07539294782356,
+        "y": -16.56440209194022,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 14,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "tree-12",
+        "img": "pictures/spring-tree.png",
+        "x": 202.73214675116168,
+        "y": 39.15370264714778,
+        "width": 139.2,
+        "height": 188.8,
+        "layer": 11,
+        "className": "spring-sprite--tree"
+      },
+      {
+        "id": "path",
+        "img": "pictures/spring-path.png",
+        "x": -74.35294117647058,
+        "y": -113.47058823529413,
+        "width": 220.2,
+        "height": 432,
+        "rotation": -24.077482318259243,
+        "layer": 15,
+        "className": "spring-sprite--path"
+      },
+      {
+        "id": "cross",
+        "img": "pictures/spring-cross.png",
+        "x": -3.411764705882355,
+        "y": -32.3529411764706,
+        "width": 94.8,
+        "height": 118.6,
+        "layer": 16,
+        "className": "spring-sprite--cross"
+      },
+      {
+        "id": "flag-1",
+        "img": "pictures/spring-flag.png",
+        "x": -113.23529411764709,
+        "y": -137.0588235294118,
+        "width": 51.2,
+        "height": 51.2,
+        "layer": 19,
+        "className": "spring-sprite--flag"
+      },
+      {
+        "id": "flag-2",
+        "img": "pictures/spring-flag.png",
+        "x": -77.59714606231951,
+        "y": -83.96586524573583,
+        "width": 51.2,
+        "height": 51.2,
+        "layer": 18,
+        "className": "spring-sprite--flag"
+      },
+      {
+        "id": "flag-3",
+        "img": "pictures/spring-flag.png",
+        "x": -37.18495087289191,
+        "y": -59.3809169669332,
+        "width": 51.2,
+        "height": 51.2,
+        "layer": 17,
+        "className": "spring-sprite--flag"
+      },
+      {
+        "id": "castle",
+        "img": "pictures/spring-castle.png",
+        "x": -18.117647058823533,
+        "y": 108.7058823529412,
+        "width": 209.5,
+        "height": 186,
+        "layer": 20,
+        "className": "spring-sprite--castle"
+      }
+    ],
+    "minions": [
+      {
+        "index": 0,
+        "x": -63,
+        "y": 46,
+        "layer": 30
+      },
+      {
+        "index": 1,
+        "x": -79,
+        "y": 54,
+        "layer": 27
+      },
+      {
+        "index": 2,
+        "x": 25,
+        "y": 46,
+        "layer": 33
+      },
+      {
+        "index": 3,
+        "x": 42,
+        "y": 50,
+        "layer": 29
+      },
+      {
+        "index": 4,
+        "x": -91,
+        "y": 65,
+        "layer": 25
+      },
+      {
+        "index": 5,
+        "x": 58,
+        "y": 56,
+        "layer": 24
+      },
+      {
+        "index": 6,
+        "x": -64,
+        "y": 65,
+        "layer": 21
+      },
+      {
+        "index": 7,
+        "x": 38,
+        "y": 65,
+        "layer": 23
+      },
+      {
+        "index": 8,
+        "x": 19,
+        "y": 65,
+        "layer": 22
+      },
+      {
+        "index": 9,
+        "x": -94,
+        "y": 47,
+        "layer": 31
+      },
+      {
+        "index": 10,
+        "x": -113,
+        "y": 54,
+        "layer": 26
+      },
+      {
+        "index": 11,
+        "x": -34,
+        "y": 66,
+        "layer": 28
+      },
+      {
+        "index": 12,
+        "x": -6,
+        "y": 60,
+        "layer": 32
+      }
+    ],
+    "minionAsset": {
+      "img": "pictures/spring-minion.png",
+      "width": 144,
+      "height": 144
+    }
+  },
   "variants": {
     "winter-j2": {
       "grid": {
@@ -670,6 +1006,7 @@
       "finalMessage": "Сила команды раскрыта — герои готовы к финальной битве."
     },
     "spring-j3": {
+      "type": "spring-battle",
       "grid": {
         "columns": 12,
         "rows": 6,
@@ -862,9 +1199,10 @@
         "caption": "Вам не победить меня!"
       },
       "supershishPlacement": "pedestal",
-      "finalMessage": "Сила команды раскрыта — герои готовы к финальной битве."
+      "finalMessage": "Группа победила Плохишиша!"
     },
     "spring-j4": {
+      "type": "spring-battle",
       "grid": {
         "columns": 12,
         "rows": 6,
@@ -1057,7 +1395,7 @@
         "caption": "Вам не победить меня!"
       },
       "supershishPlacement": "pedestal",
-      "finalMessage": "Сила команды раскрыта — герои готовы к финальной битве."
+      "finalMessage": "Группа победила Плохишиша!"
     },
     "spring-p3": {
       "grid": {
