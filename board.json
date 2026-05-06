@@ -2,7 +2,7 @@
   "springBattle": {
     "stage": {
       "width": 480,
-      "height": 360
+      "height": 390
     },
     "thresholds": {
       "player": [
