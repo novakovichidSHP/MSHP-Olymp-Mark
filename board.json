@@ -44,16 +44,16 @@
     },
     "player": {
       "img": "pictures/spring-player.png",
-      "width": 105.74,
-      "height": 115.6,
+      "width": 62.2,
+      "height": 68,
       "layer": 36
     },
     "boss": {
       "img": "pictures/spring-badshish.png",
       "x": -17,
       "y": 153,
-      "width": 360,
-      "height": 360,
+      "width": 180,
+      "height": 180,
       "layer": 2
     },
     "decorations": [
@@ -62,8 +62,8 @@
         "img": "pictures/spring-river.png",
         "x": 4.529411764705898,
         "y": -13.529411764705884,
-        "width": 768,
-        "height": 377.6,
+        "width": 384,
+        "height": 188.8,
         "layer": 1,
         "className": "spring-sprite--river"
       },
@@ -72,8 +72,8 @@
         "img": "pictures/spring-tree.png",
         "x": -200,
         "y": 25.88235294117647,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 4,
         "className": "spring-sprite--tree"
       },
@@ -82,8 +82,8 @@
         "img": "pictures/spring-tree.png",
         "x": -218.97526702075606,
         "y": -8.148280904965198,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 6,
         "className": "spring-sprite--tree"
       },
@@ -92,8 +92,8 @@
         "img": "pictures/spring-tree.png",
         "x": -193.98552403180457,
         "y": -10.495587870423854,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 10,
         "className": "spring-sprite--tree"
       },
@@ -102,8 +102,8 @@
         "img": "pictures/spring-tree.png",
         "x": -223.1082592011924,
         "y": 28.46288573727864,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 3,
         "className": "spring-sprite--tree"
       },
@@ -112,8 +112,8 @@
         "img": "pictures/spring-tree.png",
         "x": -184.44958441989903,
         "y": -0.08628484255981306,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 9,
         "className": "spring-sprite--tree"
       },
@@ -122,8 +122,8 @@
         "img": "pictures/spring-tree.png",
         "x": -235.87542168018362,
         "y": 0.0876211332748369,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 5,
         "className": "spring-sprite--tree"
       },
@@ -132,8 +132,8 @@
         "img": "pictures/spring-tree.png",
         "x": 196.2109227469444,
         "y": -10.595198457887832,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 13,
         "className": "spring-sprite--tree"
       },
@@ -142,8 +142,8 @@
         "img": "pictures/spring-tree.png",
         "x": 212.7533702371305,
         "y": 4.652502949432661,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 12,
         "className": "spring-sprite--tree"
       },
@@ -152,8 +152,8 @@
         "img": "pictures/spring-tree.png",
         "x": 236.7900609497638,
         "y": 33.15041013694391,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 7,
         "className": "spring-sprite--tree"
       },
@@ -162,8 +162,8 @@
         "img": "pictures/spring-tree.png",
         "x": 225.6570378243997,
         "y": 19.473628997895833,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 8,
         "className": "spring-sprite--tree"
       },
@@ -172,8 +172,8 @@
         "img": "pictures/spring-tree.png",
         "x": 230.07539294782356,
         "y": -16.56440209194022,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 14,
         "className": "spring-sprite--tree"
       },
@@ -182,8 +182,8 @@
         "img": "pictures/spring-tree.png",
         "x": 202.73214675116168,
         "y": 39.15370264714778,
-        "width": 139.2,
-        "height": 188.8,
+        "width": 69.6,
+        "height": 94.4,
         "layer": 11,
         "className": "spring-sprite--tree"
       },
@@ -192,8 +192,8 @@
         "img": "pictures/spring-path.png",
         "x": -74.35294117647058,
         "y": -113.47058823529413,
-        "width": 220.2,
-        "height": 432,
+        "width": 110.1,
+        "height": 216,
         "rotation": -24.077482318259243,
         "layer": 15,
         "className": "spring-sprite--path"
@@ -203,8 +203,8 @@
         "img": "pictures/spring-cross.png",
         "x": -3.411764705882355,
         "y": -32.3529411764706,
-        "width": 94.8,
-        "height": 118.6,
+        "width": 47.4,
+        "height": 59.3,
         "layer": 16,
         "className": "spring-sprite--cross"
       },
@@ -213,8 +213,8 @@
         "img": "pictures/spring-flag.png",
         "x": -113.23529411764709,
         "y": -137.0588235294118,
-        "width": 51.2,
-        "height": 51.2,
+        "width": 25.6,
+        "height": 25.6,
         "layer": 19,
         "className": "spring-sprite--flag"
       },
@@ -223,8 +223,8 @@
         "img": "pictures/spring-flag.png",
         "x": -77.59714606231951,
         "y": -83.96586524573583,
-        "width": 51.2,
-        "height": 51.2,
+        "width": 25.6,
+        "height": 25.6,
         "layer": 18,
         "className": "spring-sprite--flag"
       },
@@ -233,8 +233,8 @@
         "img": "pictures/spring-flag.png",
         "x": -37.18495087289191,
         "y": -59.3809169669332,
-        "width": 51.2,
-        "height": 51.2,
+        "width": 25.6,
+        "height": 25.6,
         "layer": 17,
         "className": "spring-sprite--flag"
       },
@@ -243,8 +243,8 @@
         "img": "pictures/spring-castle.png",
         "x": -18.117647058823533,
         "y": 108.7058823529412,
-        "width": 209.5,
-        "height": 186,
+        "width": 104.75,
+        "height": 93,
         "layer": 20,
         "className": "spring-sprite--castle"
       }
@@ -331,8 +331,8 @@
     ],
     "minionAsset": {
       "img": "pictures/spring-minion.png",
-      "width": 144,
-      "height": 144
+      "width": 72,
+      "height": 72
     }
   },
   "variants": {
