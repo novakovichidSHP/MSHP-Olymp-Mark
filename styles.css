@@ -324,7 +324,8 @@ body {
   overflow: hidden;
   border: 2px solid #88b98f;
   border-radius: 8px;
-  background: #c2c2c2;
+  background:
+    linear-gradient(180deg, #bfe9ff 0%, #eaf9f0 42%, #8fd37a 43%, #5fb363 100%);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 

@@ -384,18 +384,19 @@ function renderCommandCosts() {
     const students = getPositiveStudents();
     const pathScores = thresholds?.player
       ?.filter((step) => step.score > 0)
-      .map((step) => step.score)
+      .map((step) => formatScore(step.score * students))
       .join(" / ");
     const minionStart = thresholds?.minionStart * students;
     const minionStep = thresholds?.minionStep * students;
     const minionEnd = (thresholds?.minionStart + thresholds?.minionStep * ((battle?.minions?.length ?? 1) - 1)) * students;
+    const bossGoal = thresholds?.bossVictory * students;
     const goals = [
-      pathScores ? `Рыцарь идёт по точкам: ${pathScores} × ${students}` : null,
+      pathScores ? `Рыцарь идёт по точкам: ${pathScores}` : null,
       Number.isFinite(minionStart) && Number.isFinite(minionStep) && Number.isFinite(minionEnd)
-        ? `Приспешники исчезают по одному: после ${formatScore(minionStart)}, затем каждые ${formatScore(minionStep)} до ${formatScore(minionEnd)}`
+        ? `Приспешники исчезают по одному: ${formatScore(minionStart)} → ${formatScore(minionEnd)}, шаг ${formatScore(minionStep)}`
         : null,
-      thresholds?.bossVictory
-        ? `Плохишиш побеждён на ${formatScore(thresholds.bossVictory * students)}`
+      Number.isFinite(bossGoal)
+        ? `Плохишиш побеждён на ${formatScore(bossGoal)}`
         : null
     ].filter(Boolean);
     goals.forEach((goal) => {
