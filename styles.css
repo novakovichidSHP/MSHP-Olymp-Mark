@@ -317,7 +317,8 @@ body {
 
 .spring-battle {
   position: relative;
-  width: min(100%, calc((100vh - 96px) * 4 / 3));
+  width: min(100%, calc(100cqh * 4 / 3));
+  max-width: 100%;
   max-height: 100%;
   aspect-ratio: var(--spring-stage-width, 480) / var(--spring-stage-height, 360);
   overflow: hidden;
@@ -338,6 +339,7 @@ body {
   transform: translate(-50%, -50%) rotate(var(--spring-rotation, 0deg));
   transition: left 0.45s ease, top 0.45s ease;
   pointer-events: none;
+  overflow: visible;
 }
 
 .spring-sprite__img {
@@ -370,6 +372,21 @@ body {
   opacity: 0;
   transform: scale(1.35);
   filter: saturate(1.4) hue-rotate(35deg);
+}
+
+.spring-sprite--defeat-flash::after {
+  content: "";
+  position: absolute;
+  inset: -24%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 18%, rgba(255, 232, 91, 0.85) 19% 42%, rgba(255, 106, 61, 0.35) 43% 68%, rgba(255, 255, 255, 0) 69%);
+  box-shadow: 0 0 24px rgba(255, 211, 64, 0.85);
+  animation: springDefeatFlash 0.75s ease-out forwards;
+}
+
+.spring-sprite--defeat-flash .spring-sprite__img {
+  animation: springDefeatPop 0.75s ease-out forwards;
 }
 
 .spring-battle__hud {
@@ -409,6 +426,7 @@ body.score-battle-mode .board-area {
 }
 
 body.score-battle-mode .board-area__field {
+  align-items: center;
   justify-content: center;
   overflow: hidden;
 }
@@ -416,6 +434,8 @@ body.score-battle-mode .board-area__field {
 body.score-battle-mode .board {
   align-items: center;
   justify-content: center;
+  container-type: size;
+  padding: 6px;
 }
 
 body.score-battle-mode .game__controls {
@@ -425,6 +445,18 @@ body.score-battle-mode .game__controls {
 @keyframes springFloat {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
+}
+
+@keyframes springDefeatFlash {
+  0% { opacity: 0; transform: scale(0.35); }
+  28% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.85); }
+}
+
+@keyframes springDefeatPop {
+  0% { opacity: 1; transform: scale(1); }
+  45% { opacity: 1; transform: scale(1.18); }
+  100% { opacity: 0; transform: scale(1.45); }
 }
 
 .grid-item {

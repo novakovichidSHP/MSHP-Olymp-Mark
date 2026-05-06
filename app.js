@@ -43,6 +43,7 @@ let robotEl = null;
 let finaleEl = null;
 let resizeObserver = null;
 let hasScaleObserver = false;
+let springBattleSnapshot = null;
 
 function getVariantConfig(variantId = state?.selectedVariant) {
   return config?.variants?.[variantId] ?? null;
@@ -223,6 +224,7 @@ function saveState() {
 
 function selectVariant(variantId) {
   const nextState = buildInitialState(variantId);
+  springBattleSnapshot = null;
   state = {
     ...nextState,
     students: state?.students ?? nextState.students,
@@ -244,6 +246,7 @@ function selectVariant(variantId) {
 }
 
 function resetState() {
+  springBattleSnapshot = null;
   state = buildInitialState(state.selectedVariant);
   saveState();
   setupGame();
@@ -383,13 +386,16 @@ function renderCommandCosts() {
       ?.filter((step) => step.score > 0)
       .map((step) => step.score)
       .join(" / ");
+    const minionStart = thresholds?.minionStart * students;
+    const minionStep = thresholds?.minionStep * students;
+    const minionEnd = (thresholds?.minionStart + thresholds?.minionStep * ((battle?.minions?.length ?? 1) - 1)) * students;
     const goals = [
-      pathScores ? `Путь героя — ${pathScores} × ${students}` : null,
-      thresholds?.minionsVictory
-        ? `Победа над приспешниками — ${formatScore(thresholds.minionsVictory * students)}`
+      pathScores ? `Рыцарь идёт по точкам: ${pathScores} × ${students}` : null,
+      Number.isFinite(minionStart) && Number.isFinite(minionStep) && Number.isFinite(minionEnd)
+        ? `Приспешники исчезают по одному: после ${formatScore(minionStart)}, затем каждые ${formatScore(minionStep)} до ${formatScore(minionEnd)}`
         : null,
       thresholds?.bossVictory
-        ? `Победа над Плохишишем — ${formatScore(thresholds.bossVictory * students)}`
+        ? `Плохишиш побеждён на ${formatScore(thresholds.bossVictory * students)}`
         : null
     ].filter(Boolean);
     goals.forEach((goal) => {
@@ -475,6 +481,18 @@ function getDefeatedMinionsCount(battle) {
   return (battle?.minions ?? []).filter((minion) => score > getBattleMinionThreshold(battle, minion.index)).length;
 }
 
+function getSpringBattleSnapshot(battle) {
+  const score = getCurrentScore();
+  return {
+    minions: new Set(
+      (battle?.minions ?? [])
+        .filter((minion) => score > getBattleMinionThreshold(battle, minion.index))
+        .map((minion) => minion.index)
+    ),
+    boss: isBattleBossDefeated(battle)
+  };
+}
+
 function isBattleBossDefeated(battle = getSpringBattleConfig()) {
   const victory = battle?.thresholds?.bossVictory;
   return Number.isFinite(victory) && getCurrentScore() >= victory * getPositiveStudents();
@@ -519,6 +537,8 @@ function renderSpringBattle() {
   const bossDefeated = isBattleBossDefeated(battle);
   const minionsDefeated = getDefeatedMinionsCount(battle);
   const minionsTotal = battle.minions?.length ?? 0;
+  const previousSnapshot = springBattleSnapshot;
+  const nextSnapshot = getSpringBattleSnapshot(battle);
 
   const scene = document.createElement("div");
   scene.className = "spring-battle";
@@ -531,16 +551,19 @@ function renderSpringBattle() {
       ...battle.boss,
       label: "Плохишиш",
       className: "spring-sprite--boss",
-      hidden: bossDefeated
+      hidden: bossDefeated,
+      defeatFlash: bossDefeated && previousSnapshot && !previousSnapshot.boss
     },
     ...(battle.minions ?? []).map((minion) => {
       const defeated = score > getBattleMinionThreshold(battle, minion.index);
+      const newlyDefeated = defeated && previousSnapshot && !previousSnapshot.minions.has(minion.index);
       return {
         ...battle.minionAsset,
         ...minion,
         label: `Приспешник ${minion.index + 1}`,
         className: "spring-sprite--minion",
         hidden: defeated,
+        defeatFlash: newlyDefeated,
         floatDelay: (minion.index % 4) * 0.15
       };
     }),
@@ -558,7 +581,10 @@ function renderSpringBattle() {
       const spriteEl = createSpringSprite(
         sprite,
         stage,
-        sprite.hidden ? "spring-sprite--gone" : ""
+        [
+          sprite.hidden ? "spring-sprite--gone" : "",
+          sprite.defeatFlash ? "spring-sprite--defeat-flash" : ""
+        ].filter(Boolean).join(" ")
       );
       if (sprite.hidden) {
         spriteEl.setAttribute("aria-hidden", "true");
@@ -584,6 +610,7 @@ function renderSpringBattle() {
   });
   scene.appendChild(hud);
   board.appendChild(scene);
+  springBattleSnapshot = nextSnapshot;
 }
 
 function renderBoard() {
