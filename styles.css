@@ -350,6 +350,10 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
 }
 
+.spring-sprite--path .spring-sprite__img {
+  transform: scaleX(-1);
+}
+
 .spring-sprite--boss .spring-sprite__img,
 .spring-sprite--minion .spring-sprite__img {
   animation: springFloat 1s ease-in-out infinite;

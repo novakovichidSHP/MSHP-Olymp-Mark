@@ -190,10 +190,10 @@
       {
         "id": "path",
         "img": "pictures/spring-path.png",
-        "x": -110,
-        "y": -113.47058823529413,
-        "width": 110.1,
-        "height": 216,
+        "x": -45,
+        "y": -76,
+        "width": 96.9,
+        "height": 190,
         "rotation": 24.077482318259243,
         "layer": 15,
         "className": "spring-sprite--path"
