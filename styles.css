@@ -754,6 +754,7 @@ body.score-battle-mode .game__controls {
 .finale {
   position: absolute;
   inset: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -777,6 +778,7 @@ body.score-battle-mode .game__controls {
 
 .finale__card {
   position: relative;
+  z-index: 1;
   padding: 18px 22px;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.92);
